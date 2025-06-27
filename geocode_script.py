@@ -24,7 +24,7 @@ geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 # 3. Chargement du fichier CSV avec pandas
 print(f"Chargement du fichier d'adresses : {input_filename}")
 try:
-    df = pd.read_csv(input_filename)
+    df = pd.read_csv(input_filename, delimiter=';') 
 except FileNotFoundError:
     print(f"ERREUR : Le fichier '{input_filename}' n'a pas été trouvé. Assurez-vous qu'il est dans le même dossier que le script.")
     exit()
