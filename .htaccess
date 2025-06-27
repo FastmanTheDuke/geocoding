@@ -1,0 +1,77 @@
+# ===================================================================
+# Fichier .htaccess avec Réécriture d'URL et Cache
+# ===================================================================
+
+# Pour la sécurité, empêche le listage des répertoires
+Options -Indexes
+
+# -------------------------------------------------------------------
+# PARTIE 1 : RÉÉCRITURE D'URL (ROUTING)
+# -------------------------------------------------------------------
+
+# Activer le moteur de réécriture d'URL
+RewriteEngine On
+
+# Ne pas appliquer les règles aux fichiers ou dossiers qui existent déjà
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Règle pour l'API : redirige /api/locations vers /api/locations.php
+# ^api/locations$ : correspond exactement à l'URL "api/locations"
+# [NC] : non sensible à la casse (API/locations fonctionnerait aussi)
+# [L] : dernière règle à appliquer si elle correspond
+RewriteRule ^api/locations$ api/locations.php [NC,L]
+
+# Règle optionnelle : pour avoir des URL propres sur tout le site
+# Redirige /page vers /page.php si le fichier page.php existe
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+
+# -------------------------------------------------------------------
+# PARTIE 2 : DIRECTIVES DE MISE EN CACHE (PERFORMANCE)
+# -------------------------------------------------------------------
+
+<IfModule mod_expires.c>
+  # Activer le module de cache
+  ExpiresActive On
+
+  # Par défaut, tout est mis en cache pour 1 mois
+  ExpiresDefault "access plus 1 month"
+
+  # -- Cache pour les contenus dynamiques --
+
+  # Ne pas mettre en cache les réponses de l'API (ou très peu)
+  # Le navigateur redemandera toujours les données pour avoir les plus récentes
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 0 seconds"
+
+  # Ne pas mettre en cache les pages HTML/PHP
+  ExpiresByType text/html "access plus 0 seconds"
+
+  # -- Cache long pour les contenus statiques qui changent peu --
+
+  # Mettre en cache les images pour 1 an
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+
+  # Mettre en cache les CSS, JS et polices pour 1 an
+  # Le navigateur ne les re-téléchargera que si vous changez leur nom/URL
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType application/x-font-woff "access plus 1 year"
+  ExpiresByType application/x-font-ttf "access plus 1 year"
+  ExpiresByType font/opentype "access plus 1 year"
+</IfModule>
+
+# Pour une meilleure gestion du cache, il est bon de désactiver les ETags
+# qui peuvent être mal gérés par les serveurs derrière un proxy
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
