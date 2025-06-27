@@ -42,7 +42,7 @@ for index, row in df.iterrows():
     # On ne traite que les lignes qui n'ont pas encore été géocodées
     if pd.isna(row['latitude']):
         # Construction de l'adresse complète pour une meilleure précision
-        address = f"{row['Adresse']}, {row['CodePostal']} {row['Ville']}, {row['Pays']}"
+        address = f"{row['address']}, {row['postcode']} {row['city']}, {row['country']}"
         print(f"Géocodage de l'adresse (ligne {index + 1}) : {address}")
 
         try:
