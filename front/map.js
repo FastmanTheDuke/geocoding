@@ -11,7 +11,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // 3. Récupération des données depuis notre backend
 // fetch() est la manière moderne en JavaScript de faire une requête réseau.
 // Remplacez '/api/locations' par l'URL complète de votre API si elle n'est pas sur le même serveur.
-fetch('/api/locations')
+fetch('../api/locations')
     .then(response => response.json()) // On convertit la réponse en JSON
     .then(locations => {
         // 4. Boucle sur chaque lieu reçu
