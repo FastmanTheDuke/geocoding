@@ -22,6 +22,8 @@ RewriteRule ^ - [L]
 # [NC] : non sensible à la casse (API/locations fonctionnerait aussi)
 # [L] : dernière règle à appliquer si elle correspond
 RewriteRule ^api/locations$ api/locations.php [NC,L]
+RewriteRule ^index.html$ front/map.html [NC,L]
+RewriteRule ^index$ front/map.html [NC,L]
 
 # Règle optionnelle : pour avoir des URL propres sur tout le site
 # Redirige /page vers /page.php si le fichier page.php existe
